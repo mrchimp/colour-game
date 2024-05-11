@@ -27,11 +27,15 @@ function onHueChange(e) {
   setHue(+e.target.value);
 }
 
-const update = throttle(function (e) {
+const onMouseMove = throttle(function (e) {
   if (!pick.value) {
     return;
   }
 
+  getPickerValues(e);
+}, 16);
+
+function getPickerValues(e) {
   const rect = picker.value.getBoundingClientRect();
   const x = e.clientX - rect.left; //x position within the element.
   const y = e.clientY - rect.top; //y position within the element.
@@ -40,7 +44,7 @@ const update = throttle(function (e) {
 
   saturation.value = Math.round(xPerc);
   lightness.value = Math.round(100 - yPerc);
-}, 16);
+}
 </script>
 
 <template>
@@ -77,7 +81,8 @@ const update = throttle(function (e) {
           :style="`background: linear-gradient(to right, hsl(${hue},0%,50%), hsl(${hue},100%,50%));`"
           @mousedown="pick = true"
           @mouseup="pick = false"
-          @mousemove="update"
+          @mousemove="onMouseMove"
+          @click="getPickerValues"
         >
           <div
             class="picker-marker"
@@ -155,6 +160,7 @@ const update = throttle(function (e) {
   &::after {
     content: "";
     position: absolute;
+    pointer-events: none;
     top: 0;
     left: 0;
     bottom: 0;
