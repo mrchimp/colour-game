@@ -20,10 +20,13 @@ function selectRandomiser() {
   <h1>Colour Game</h1>
   <h2>Instructions</h2>
   <ol>
+    <li>
+      You and a friend both open the game on your phones.
+    </li>
     <li>Generate a random colour</li>
     <li>
-      Describe the colour to your friend in words that don't include colour
-      names (reg, green, blue, etc.)
+      Describe the colour to your friend in five words or fewer, without
+      using colour names (red, green, blue, etc.)
     </li>
     <li>
       Your friend then tries to guess the colour based on your description
