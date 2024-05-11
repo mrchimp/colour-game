@@ -70,7 +70,6 @@ function getPickerValues(e) {
             type="range"
             min="0"
             max="100"
-            orient="vertical"
             v-model="lightness"
           />
         </div>
@@ -151,7 +150,8 @@ function getPickerValues(e) {
 
 .picker-container {
   display: grid;
-  grid-template-columns: auto 1fr;
+  grid-template-columns: 2rem 1fr;
+  position: relative;
 }
 
 .picker-swatch {
@@ -189,10 +189,11 @@ function getPickerValues(e) {
 .hue {
   label {
     display: block;
+    text-align: left;
   }
 
   input {
-    width: 100%;
+    width: var(--swatch-size);
   }
 
   /* Chrome, Safari, Opera, and Edge  */
@@ -230,18 +231,18 @@ function getPickerValues(e) {
 }
 
 .lightness {
-  position: relative;
+  position: absolute;
+  top: 4.5rem;
+  left: -8rem;
+  transform: rotate(-90deg);
 
   label {
     display: block;
-    position: absolute;
-    bottom: 2rem;
-    left: -3rem;
-    transform: rotate(-90deg);
+    text-align: left;
   }
 
   input {
-    height: var(--swatch-size);
+    width: var(--swatch-size);
   }
 }
 </style>
