@@ -1,0 +1,218 @@
+<script setup>
+import { onMounted, ref } from "vue";
+
+defineProps({});
+
+const hue = ref(0);
+const saturation = ref(50);
+const lightness = ref(50);
+const pick = ref(false);
+const picker = ref(null);
+
+// TODO throttle this
+function update(e) {
+  if (!pick.value) {
+    return;
+  }
+
+  const rect = e.target.getBoundingClientRect();
+  const x = e.clientX - rect.left; //x position within the element.
+  const y = e.clientY - rect.top; //y position within the element.
+
+  // TODO store this elsewhere
+  const width = picker.value.clientWidth;
+  const height = picker.value.clientHeight;
+
+  const xPerc = (x / width) * 100;
+  const yPerc = (y / height) * 100;
+
+  saturation.value = Math.round(xPerc);
+  lightness.value = Math.round(100 - yPerc);
+}
+</script>
+
+<template>
+  <div class="container">
+    <div class="picker">
+      <div class="hue">
+        <label for="hue">Hue</label>
+        <input id="hue" type="range" min="0" max="360" v-model="hue" />
+      </div>
+
+      <div class="picker-container">
+        <div class="lightness">
+          <label for="lightness">Lightness</label>
+          <input
+            id="lightness"
+            type="range"
+            min="0"
+            max="100"
+            orient="vertical"
+            v-model="lightness"
+          />
+        </div>
+
+        <div
+          ref="picker"
+          class="picker-swatch"
+          :style="`background: linear-gradient(to right, hsl(${hue},0%,50%), hsl(${hue},100%,50%));`"
+          @mousedown="pick = true"
+          @mouseup="pick = false"
+          @mousemove="update"
+        >
+          <div
+            class="picker-marker"
+            :style="{
+              left: `${saturation}%`,
+              bottom: `${lightness}%`,
+            }"
+          ></div>
+        </div>
+        <div></div>
+        <div class="saturation">
+          <input
+            id="saturation"
+            type="range"
+            min="0"
+            max="100"
+            v-model="saturation"
+          />
+          <label for="#saturation">Saturation</label>
+        </div>
+      </div>
+    </div>
+
+    <div class="result">
+      <div
+        class="preview-swatch"
+        :style="`background-color: hsl(${hue},${saturation}%,${lightness}%);`"
+      ></div>
+
+      <div>
+        <p>
+          Hue: <span>{{ hue }}</span>
+        </p>
+        <p>
+          Saturation: <span>{{ saturation }}</span>
+        </p>
+        <p>
+          Lightness: <span>{{ lightness }}</span>
+        </p>
+      </div>
+    </div>
+  </div>
+</template>
+
+<style scoped>
+.container {
+  --swatch-size: 200px;
+  display: flex;
+  column-gap: 4rem;
+  flex-wrap: wrap;
+}
+
+.result {
+  padding-top: 3rem;
+}
+
+.picker-swatch,
+.preview-swatch {
+  width: var(--swatch-size);
+  height: var(--swatch-size);
+}
+
+.picker-container {
+  display: grid;
+  grid-template-columns: auto 1fr;
+}
+
+.picker-swatch {
+  position: relative;
+
+  &::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background-image: linear-gradient(
+      to top,
+      rgb(0, 0, 0),
+      rgb(128, 128, 128, 0) 50%,
+      rgb(255, 255, 255)
+    );
+  }
+}
+
+.picker-marker {
+  border-radius: 50%;
+  border: 2px solid white;
+  background: rgb(0, 0, 0, 0.5);
+  height: 1rem;
+  position: absolute;
+  pointer-events: none;
+  transform: translate(-50%, 50%);
+  width: 1rem;
+  z-index: 1;
+}
+
+.hue {
+  label {
+    display: block;
+  }
+
+  input {
+    width: 100%;
+  }
+
+  /* Chrome, Safari, Opera, and Edge  */
+  input[type="range"]::-webkit-slider-runnable-track,
+  /* Firefox */
+  input[type="range"]::-moz-range-track {
+    background: linear-gradient(
+      to right,
+      hsl(0, 100%, 50%),
+      hsl(30, 100%, 50%),
+      hsl(60, 100%, 50%),
+      hsl(90, 100%, 50%),
+      hsl(120, 100%, 50%),
+      hsl(150, 100%, 50%),
+      hsl(180, 100%, 50%),
+      hsl(210, 100%, 50%),
+      hsl(240, 100%, 50%),
+      hsl(270, 100%, 50%),
+      hsl(300, 100%, 50%),
+      hsl(330, 100%, 50%),
+      hsl(360, 100%, 50%)
+    );
+    height: 1rem;
+  }
+}
+
+.saturation {
+  label {
+    display: block;
+    text-align: left;
+  }
+  input {
+    width: var(--swatch-size);
+  }
+}
+
+.lightness {
+  position: relative;
+
+  label {
+    display: block;
+    position: absolute;
+    bottom: 2rem;
+    left: -3rem;
+    transform: rotate(-90deg);
+  }
+
+  input {
+    height: var(--swatch-size);
+  }
+}
+</style>
