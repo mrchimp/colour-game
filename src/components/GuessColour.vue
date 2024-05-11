@@ -1,34 +1,46 @@
 <script setup>
-import { onMounted, ref } from "vue";
+import { onMounted, ref, watch } from "vue";
+import throttle from "lodash.throttle";
+import { randInt, setHue } from "../utils";
 
 defineProps({});
 
-const hue = ref(0);
-const saturation = ref(50);
-const lightness = ref(50);
+const hue = ref(randInt(360));
+const saturation = ref(randInt(100));
+const lightness = ref(randInt(100));
 const pick = ref(false);
 const picker = ref(null);
 
-// TODO throttle this
-function update(e) {
+const pickerSize = [0, 0];
+
+watch(hue, () => {
+  setHue(hue.value);
+});
+
+onMounted(() => {
+  setHue(hue.value);
+  pickerSize[0] = picker.value.clientWidth;
+  pickerSize[1] = picker.value.clientHeight;
+});
+
+function onHueChange(e) {
+  setHue(+e.target.value);
+}
+
+const update = throttle(function (e) {
   if (!pick.value) {
     return;
   }
 
-  const rect = e.target.getBoundingClientRect();
+  const rect = picker.value.getBoundingClientRect();
   const x = e.clientX - rect.left; //x position within the element.
   const y = e.clientY - rect.top; //y position within the element.
-
-  // TODO store this elsewhere
-  const width = picker.value.clientWidth;
-  const height = picker.value.clientHeight;
-
-  const xPerc = (x / width) * 100;
-  const yPerc = (y / height) * 100;
+  const xPerc = (x / pickerSize[0]) * 100;
+  const yPerc = (y / pickerSize[1]) * 100;
 
   saturation.value = Math.round(xPerc);
   lightness.value = Math.round(100 - yPerc);
-}
+}, 16);
 </script>
 
 <template>
@@ -36,7 +48,14 @@ function update(e) {
     <div class="picker">
       <div class="hue">
         <label for="hue">Hue</label>
-        <input id="hue" type="range" min="0" max="360" v-model="hue" />
+        <input
+          id="hue"
+          type="range"
+          min="0"
+          max="360"
+          v-model="hue"
+          @input="onHueChange"
+        />
       </div>
 
       <div class="picker-container">
@@ -85,7 +104,7 @@ function update(e) {
     <div class="result">
       <div
         class="preview-swatch"
-        :style="`background-color: hsl(${hue},${saturation}%,${lightness}%);`"
+        :style="`background: hsl(${hue},${saturation}%,${lightness}%)`"
       ></div>
 
       <div>
@@ -119,6 +138,10 @@ function update(e) {
 .preview-swatch {
   width: var(--swatch-size);
   height: var(--swatch-size);
+}
+
+.picker-swatch {
+  transition: background var(--trans-time) var(--trans-ease);
 }
 
 .picker-container {

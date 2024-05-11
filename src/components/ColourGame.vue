@@ -1,11 +1,19 @@
 <script setup>
-import { ref } from "vue";
+import { nextTick, ref } from "vue";
 import RandomColour from "./RandomColour.vue";
 import GuessColour from "./GuessColour.vue";
 
 defineProps({});
 
 const tab = ref("random");
+const randomiser = ref(null);
+
+function selectRandomiser() {
+  tab.value = "random";
+  nextTick(() => {
+    randomiser.value.randomise();
+  });
+}
 </script>
 
 <template>
@@ -25,15 +33,15 @@ const tab = ref("random");
     <li>Winner gets a cake (if the loser is nice like that)</li>
   </ol>
   <div class="tabs">
-    <button :class="{ active: tab === 'random' }" @click="tab = 'random'">
-      Step 1: Generate Colour
+    <button :class="{ active: tab === 'random' }" @click="selectRandomiser">
+      Player 1: Generate Colour
     </button>
     <button :class="{ active: tab === 'guess' }" @click="tab = 'guess'">
-      Step 2: Guess
+      Player 2: Guess Colour
     </button>
   </div>
 
-  <RandomColour v-if="tab === 'random'" />
+  <RandomColour ref="randomiser" v-if="tab === 'random'" />
   <GuessColour v-else />
 </template>
 
