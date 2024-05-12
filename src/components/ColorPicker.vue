@@ -172,13 +172,9 @@ defineExpose({
 </template>
 
 <style lang="scss" scoped>
-.picker {
-  --swatch-size: 200px;
-}
-
 .picker-container {
   display: grid;
-  grid-template-columns: 4rem var(--swatch-size);
+  grid-template-columns: 3rem var(--swatch-size);
   position: relative;
   gap: 3px;
 }

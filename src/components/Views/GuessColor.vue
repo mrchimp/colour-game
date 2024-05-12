@@ -51,12 +51,10 @@ onMounted(() => {
 
 <style scoped>
 .container {
-  --swatch-size: 200px;
   display: flex;
   column-gap: 4rem;
   flex-wrap: wrap;
   justify-content: center;
-  margin-inline: 4rem;
 }
 
 .result {

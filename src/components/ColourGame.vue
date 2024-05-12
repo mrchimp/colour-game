@@ -52,6 +52,7 @@ h1 {
 .tabs {
   display: flex;
   justify-content: center;
+  flex-wrap: wrap;
   gap: 1rem;
   margin-bottom: 2rem;
 }
