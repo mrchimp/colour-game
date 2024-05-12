@@ -2,8 +2,6 @@
 import { onMounted, ref } from "vue";
 import { randInt, setHue } from "../utils";
 
-defineProps({});
-
 const hue = ref(randInt(360));
 const saturation = ref(randInt(100));
 const lightness = ref(randInt(100));
