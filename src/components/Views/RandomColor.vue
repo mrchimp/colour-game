@@ -1,10 +1,11 @@
 <script setup>
 import { onMounted, ref } from "vue";
-import { hsl, randInt, setHue } from "../../utils";
+import { hsl, makeScore, randInt, setHue } from "../../utils";
 
 const hue = ref(randInt(360));
 const saturation = ref(randInt(100));
 const lightness = ref(randInt(100));
+const guess = ref({ h: 0, s: 0, l: 0 });
 
 onMounted(() => {
   setHue(hue.value);
@@ -46,6 +47,38 @@ defineExpose({
         </p>
       </div>
     </div>
+
+    <div class="guesses">
+      <h2>Guess</h2>
+      <p>Enter the guesser's guess here to get a score.</p>
+      <div class="colors">
+        <div class="color">
+          <label>Hue</label>
+          <input type="number" v-model="guess.h" />
+        </div>
+        <div class="color">
+          <label>S</label>
+          <input type="number" v-model="guess.s" />
+        </div>
+        <div class="color">
+          <label>L</label>
+          <input type="number" v-model="guess.l" />
+        </div>
+      </div>
+      <div class="score">
+        <p>
+          Score:
+          {{
+            makeScore({ h: hue, s: saturation, l: lightness }, guess).toFixed(2)
+          }}
+        </p>
+        <p
+          v-if="makeScore({ h: hue, s: saturation, l: lightness }, guess) > 99"
+        >
+          Imperceptible!
+        </p>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -75,6 +108,39 @@ defineExpose({
 
   p {
     margin-block: 0.5rem;
+  }
+}
+
+h2 {
+  text-decoration: underline;
+  text-decoration-style: wavy;
+  text-decoration-thickness: 2px;
+  text-decoration-color: var(--highlight-color);
+  transition: text-decoration-color var(--trans-time) var(--trans-ease);
+}
+
+.guesses {
+  max-width: 400px;
+  margin-top: 4rem;
+
+  .colors {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+  }
+
+  .color {
+    display: flex;
+    flex-direction: column;
+  }
+
+  input {
+    font-size: 2rem;
+    width: 100%;
+  }
+
+  .score {
+    font-size: 2rem;
   }
 }
 </style>
