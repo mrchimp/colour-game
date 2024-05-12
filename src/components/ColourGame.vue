@@ -1,17 +1,18 @@
 <script setup>
 import { nextTick, ref } from "vue";
-import RandomColour from "./RandomColour.vue";
-import GuessColour from "./GuessColour.vue";
+import { useRoute, useRouter } from "vue-router";
 import InstructionPopup from "./InstructionPopup.vue";
 
-const tab = ref("random");
-const randomiser = ref(null);
+const route = useRoute();
+const router = useRouter();
+const routeComponent = ref(null);
 const showInstructions = ref(false);
 
 function selectRandomiser() {
-  tab.value = "random";
-  nextTick(() => {
-    randomiser.value.randomise();
+  router.push({ name: "random-color" }).then(() => {
+    nextTick(() => {
+      routeComponent.value.randomise();
+    });
   });
 }
 </script>
@@ -23,18 +24,22 @@ function selectRandomiser() {
   </button>
   <div class="tabs">
     <button
-      :class="{ active: tab === 'random' }"
+      :class="{ active: route.name === 'random-color' }"
       @click.prevent="selectRandomiser"
     >
       Player 1: Generate Colour
     </button>
-    <button :class="{ active: tab === 'guess' }" @click.prevent="tab = 'guess'">
+    <button
+      :class="{ active: route.name === 'guess-color' }"
+      @click.prevent="$router.push({ name: 'guess-color' })"
+    >
       Player 2: Guess Colour
     </button>
   </div>
 
-  <RandomColour ref="randomiser" v-if="tab === 'random'" />
-  <GuessColour v-else />
+  <RouterView v-slot="{ Component }">
+    <component ref="routeComponent" :is="Component" />
+  </RouterView>
 
   <InstructionPopup v-if="showInstructions" @close="showInstructions = false" />
 </template>

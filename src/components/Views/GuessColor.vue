@@ -1,7 +1,7 @@
 <script setup>
 import { onMounted, ref, watch } from "vue";
 import throttle from "lodash.throttle";
-import { randInt, setHue } from "../utils";
+import { randInt, setHue } from "../../utils";
 
 const hue = ref(randInt(360));
 const saturation = ref(randInt(100));
