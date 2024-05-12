@@ -7,5 +7,5 @@ export function randInt(max) {
 }
 
 export function hsl(h, s, l) {
-  return `hslStr(${h},${s}%,${l}%)`;
+  return `hsl(${h},${s}%,${l}%)`;
 }
