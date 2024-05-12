@@ -25,7 +25,7 @@ defineExpose({
 <template>
   <div
     class="swatch"
-    :style="`background-color: hsl(${hue},${saturation}%,${lightness}%)`"
+    :style="{ background: hsl(hue, saturation, lightness) }"
     @click="randomise"
   ></div>
 

@@ -5,3 +5,7 @@ export function setHue(hue) {
 export function randInt(max) {
   return Math.floor(Math.random() * max);
 }
+
+export function hsl(h, s, l) {
+  return `hslStr(${h},${s}%,${l}%)`;
+}

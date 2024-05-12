@@ -2,6 +2,7 @@
 import { onMounted, ref, watch } from "vue";
 import throttle from "lodash.throttle";
 import { randInt, setHue } from "../../utils";
+import { hsl } from "../../utils";
 
 const hue = ref(randInt(360));
 const saturation = ref(randInt(100));
@@ -75,7 +76,11 @@ function getPickerValues(e) {
         <div
           ref="picker"
           class="picker-swatch"
-          :style="`background: linear-gradient(to right, hsl(${hue},0%,50%), hsl(${hue},100%,50%));`"
+          :style="`background: linear-gradient(to right, ${hsl(
+            hue,
+            0,
+            50
+          )}, ${hsl(hue, 100, 50)});`"
           @mousedown="pick = true"
           @mouseup="pick = false"
           @mousemove="onMouseMove"
@@ -106,7 +111,7 @@ function getPickerValues(e) {
     <div class="result">
       <div
         class="swatch preview-swatch"
-        :style="`background: hsl(${hue},${saturation}%,${lightness}%)`"
+        :style="{ background: hsl(hue, saturation, lightness) }"
       ></div>
 
       <div>
