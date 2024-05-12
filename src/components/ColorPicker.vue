@@ -1,7 +1,7 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import throttle from "lodash.throttle";
-import { hsl, randInt, setHue } from "../utils";
+import { hsl, limit, randInt, setHue } from "../utils";
 
 const emit = defineEmits(["change"]);
 const picker = ref(null);
@@ -59,6 +59,21 @@ function getColor() {
   };
 }
 
+function nudgeHue(amount) {
+  hue.value = limit(hue.value + amount, 360);
+  emitValues();
+}
+
+function nudgeSaturation(amount) {
+  saturation.value = limit(saturation.value + amount, 100);
+  emitValues();
+}
+
+function nudgeLightness(amount) {
+  lightness.value = limit(lightness.value + amount, 100);
+  emitValues();
+}
+
 onMounted(() => {
   setHue(hue.value);
   pickerSize[0] = picker.value.clientWidth;
@@ -73,29 +88,39 @@ defineExpose({
 
 <template>
   <div class="picker">
-    <div class="hue">
-      <label for="hue">Hue</label>
-      <input
-        id="hue"
-        type="range"
-        min="0"
-        max="360"
-        v-model="hue"
-        @input="onHueChange"
-      />
-    </div>
-
     <div class="picker-container">
-      <div class="lightness">
-        <label for="lightness">Lightness</label>
+      <div></div>
+      <div class="hue">
+        <div class="label">
+          <button class="nudge" @click="nudgeHue(-1)">-</button>
+          <label for="hue">Hue</label>
+          <button class="nudge" @click="nudgeHue(+1)">+</button>
+        </div>
         <input
-          id="lightness"
+          id="hue"
           type="range"
           min="0"
-          max="100"
-          v-model="lightness"
-          @input="emitValues"
+          max="360"
+          v-model="hue"
+          @input="onHueChange"
         />
+      </div>
+      <div class="lightness">
+        <div class="rotator">
+          <div class="label">
+            <button class="nudge" @click="nudgeLightness(-1)">-</button>
+            <label for="lightness">Lightness</label>
+            <button class="nudge" @click="nudgeLightness(+1)">+</button>
+          </div>
+          <input
+            id="lightness"
+            type="range"
+            min="0"
+            max="100"
+            v-model="lightness"
+            @input="emitValues"
+          />
+        </div>
       </div>
 
       <div
@@ -127,20 +152,35 @@ defineExpose({
           min="0"
           max="100"
           v-model="saturation"
+          :style="{
+            background: `linear-gradient(to right, ${hsl(hue, 0, 50)}, ${hsl(
+              hue,
+              100,
+              50
+            )})`,
+          }"
           @input="emitValues"
         />
-        <label for="#saturation">Saturation</label>
+        <div class="label">
+          <button class="nudge" @click="nudgeSaturation(-1)">-</button>
+          <label for="#saturation">Saturation</label>
+          <button class="nudge" @click="nudgeSaturation(+1)">+</button>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
-<style scoped>
-.picker-container {
+<style lang="scss" scoped>
+.picker {
   --swatch-size: 200px;
+}
+
+.picker-container {
   display: grid;
-  grid-template-columns: 2rem 1fr;
+  grid-template-columns: 4rem var(--swatch-size);
   position: relative;
+  gap: 3px;
 }
 
 .picker-swatch {
@@ -181,20 +221,22 @@ defineExpose({
   z-index: 1;
 }
 
+.label {
+  display: flex;
+  justify-content: space-between;
+}
+
+input[type="range"] {
+  width: 100%;
+}
+
+input[type="range"]::-webkit-slider-runnable-track,
+input[type="range"]::-moz-range-track {
+  background: transparent;
+}
+
 .hue {
-  label {
-    display: block;
-    text-align: left;
-  }
-
   input {
-    width: var(--swatch-size);
-  }
-
-  /* Chrome, Safari, Opera, and Edge  */
-  input[type="range"]::-webkit-slider-runnable-track,
-  /* Firefox */
-  input[type="range"]::-moz-range-track {
     background: linear-gradient(
       to right,
       hsl(0, 100%, 50%),
@@ -211,33 +253,34 @@ defineExpose({
       hsl(330, 100%, 50%),
       hsl(360, 100%, 50%)
     );
-    height: 1rem;
-  }
-}
-
-.saturation {
-  label {
-    display: block;
-    text-align: left;
-  }
-  input {
-    width: var(--swatch-size);
   }
 }
 
 .lightness {
-  position: absolute;
-  top: 4.5rem;
-  left: -8rem;
-  transform: rotate(-90deg);
-
-  label {
-    display: block;
-    text-align: left;
-  }
+  position: relative;
 
   input {
+    background: linear-gradient(to right, #000, #fff);
+  }
+
+  .rotator {
+    position: absolute;
+    right: 0;
+    top: 0;
+    transform: translateY(-100%) rotate(-90deg);
+    transform-origin: bottom right;
     width: var(--swatch-size);
   }
+}
+
+.nudge {
+  align-items: center;
+  background: transparent;
+  color: currentColor;
+  display: inline-flex;
+  height: 1.5rem;
+  justify-content: center;
+  padding: 0;
+  width: 2rem;
 }
 </style>

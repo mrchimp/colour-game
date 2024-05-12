@@ -65,6 +65,7 @@ function getScore() {
 .wrapper {
   display: grid;
   grid-template-columns: 1fr 1fr;
+  gap: 2rem;
 }
 
 .swatch {

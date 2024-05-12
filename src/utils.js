@@ -9,3 +9,7 @@ export function randInt(max) {
 export function hsl(h, s, l) {
   return `hsl(${h},${s}%,${l}%)`;
 }
+
+export function limit(val, max, min = 0) {
+  return Math.max(min, Math.min(val, max));
+}
