@@ -44,12 +44,4 @@ defineExpose({
   <button @click="randomise">Randomise</button>
 </template>
 
-<style scoped>
-.swatch {
-  width: 100%;
-  height: 200px;
-  transition: background-color var(--trans-time) var(--trans-ease);
-  border: 1px solid white;
-  border-radius: 7px;
-}
-</style>
+<style scoped></style>

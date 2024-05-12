@@ -105,7 +105,7 @@ function getPickerValues(e) {
 
     <div class="result">
       <div
-        class="preview-swatch"
+        class="swatch preview-swatch"
         :style="`background: hsl(${hue},${saturation}%,${lightness}%)`"
       ></div>
 
