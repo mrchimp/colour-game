@@ -29,19 +29,38 @@ defineExpose({
     @click="randomise"
   ></div>
 
-  <div>
-    <p>
-      Hue: <span>{{ hue }}</span>
-    </p>
-    <p>
-      Saturation: <span>{{ saturation }}</span>
-    </p>
-    <p>
-      Lightness: <span>{{ lightness }}</span>
-    </p>
+  <div class="controls">
+    <div>
+      <button @click="randomise">Randomise</button>
+    </div>
+    <div class="output">
+      <p>
+        Hue: <b>{{ hue }}</b>
+      </p>
+      <p>
+        Saturation: <b>{{ saturation }}</b>
+      </p>
+      <p>
+        Lightness: <b>{{ lightness }}</b>
+      </p>
+    </div>
   </div>
-
-  <button @click="randomise">Randomise</button>
 </template>
 
-<style scoped></style>
+<style lang="scss" scoped>
+.controls {
+  align-items: center;
+  justify-content: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+}
+
+.output {
+  text-align: left;
+
+  p {
+    margin-block: 0.5rem;
+  }
+}
+</style>
