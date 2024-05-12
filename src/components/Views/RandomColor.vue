@@ -57,11 +57,11 @@ defineExpose({
           <input type="number" v-model="guess.h" />
         </div>
         <div class="color">
-          <label>S</label>
+          <label>Saturation</label>
           <input type="number" v-model="guess.s" />
         </div>
         <div class="color">
-          <label>L</label>
+          <label>Lightness</label>
           <input type="number" v-model="guess.l" />
         </div>
       </div>
