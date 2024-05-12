@@ -1,27 +1,14 @@
 <script setup>
 import { ref } from "vue";
 import ColorPicker from "../ColorPicker.vue";
-import { hsl } from "../../utils";
+import { hsl, makeScore } from "../../utils";
 
 const target = ref({ h: 0, s: 0, l: 0 });
 const guess = ref({ h: 0, s: 0, l: 0 });
 const score = ref(0);
 
 function getScore() {
-  score.value = 12;
-  let hScore;
-  let sScore;
-  let lScore;
-
-  hScore = Math.abs(target.value.h - guess.value.h);
-  if (hScore > 180) {
-    hScore = 360 - hScore;
-  }
-
-  sScore = Math.abs(target.value.s - guess.value.s);
-  lScore = Math.abs(target.value.l - guess.value.l);
-
-  score.value = 100 - ((hScore + sScore + lScore) / 380) * 100;
+  score.value = makeScore(target.value, guess.value);
 }
 </script>
 
