@@ -130,6 +130,8 @@ function getPickerValues(e) {
   display: flex;
   column-gap: 4rem;
   flex-wrap: wrap;
+  justify-content: center;
+  margin-inline: 4rem;
 }
 
 .result {
